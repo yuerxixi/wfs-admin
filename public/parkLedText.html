@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>诱导屏文字</title>
+    <link rel="stylesheet" href="css/quill.core.css" />
+    <link rel="stylesheet" href="css/quill.snow.css" />
+    <link rel="stylesheet" href="css/quill.bubble.css" />
+    <script src="js/jquery.min.js"></script>
+    <style>
+      body{
+        margin: 0;
+        padding: 0;
+      }
+      .led-wrap1{
+        width: 240px;
+        height: 480px;
+      }
+      .led-wrap2{
+        width: 384px;
+        height: 256px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="ql-editor">
+
+    </div>
+  </body>
+  <script>
+    $(function() {
+      var id = GetQueryString('id')
+
+      $.ajax({
+        type: 'get',
+        async: false,
+        // url: "http://192.168.32.122:8080/api/message/getMessageContent?id=" + id,
+        url: "http://59.63.209.17:26015/api/message/getMessageContent?id=" + id,
+        dataType: 'text',
+        success: function (data2) {
+          data = JSON.parse(data2).data
+          var ledType = data.ledType
+          if (ledType == 1) {
+            $(".ql-editor").addClass('led-wrap1')
+          } else {
+            $(".ql-editor").addClass('led-wrap2')
+          }
+          var messageContent = decodeURI(data.messageContent)
+          $(".ql-editor").html(messageContent)
+        }
+      });
+    })
+
+    function GetQueryString(name) {
+      var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+      var r = window.location.search.substr(1).match(reg);
+      if(r!=null)return  unescape(r[2]); return null;
+    }
+  </script>
+</html>

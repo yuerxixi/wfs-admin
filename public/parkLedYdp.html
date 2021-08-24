@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>LED诱导屏</title>
+    <script src="js/jquery.min.js"></script>
+    <style>
+      body{
+        margin: 0;
+        padding: 0;
+      }
+      .container{
+        width: 240px;
+        height: 480px;
+        background: linear-gradient(0deg, #030208, #181623);
+        color: #fff;
+        padding-top: 10px;
+        box-sizing: border-box;
+      }
+      .header{
+        width: 195px;
+        height: 41px;
+        margin-left: 10px;
+        background: url(image/parking-header1.png) no-repeat;
+        background-size: 100% 100%;
+      }
+      .parking-wrap{
+        width: 100%;
+        height: 429px;
+      }
+      /* 二层样式 */
+      .parking-wrap .park-area{
+        width: 100%;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        font-size: 0;
+      }
+      .west-2-wrap .park-area{
+        margin-top: 42px;
+      }
+      .west-2-wrap .park-area:first-child{
+        margin-top: 30px;
+      }
+      .west-2-wrap .park-area:last-child{
+        margin-top: 36px;
+      }
+      .east-2-wrap .park-area{
+        margin-top: 29px;
+      }
+      .east-2-wrap .park-area:first-child{
+        margin-top: 12px;
+      }
+      .east-2-wrap .park-area:last-child{
+        margin-top: 36px;
+      }
+      .parking-wrap .park-area .parking-direction-up{
+        width: 34px;
+        height: 35px;
+        margin-left: 28px;
+        background: url(image/parking-up.png) no-repeat;
+        background-size: 100% 100%;
+      }
+      .parking-wrap .park-area .parking-direction-down{
+        width: 34px;
+        height: 35px;
+        margin-left: 28px;
+        background: url(image/parking-down.png) no-repeat;
+        background-size: 100% 100%;
+      }
+      .parking-wrap .park-area .parking-direction-lower-left{
+        width: 28px;
+        height: 31px;
+        margin: 0 6px 0 28px;
+        background: url(image/parking-lower-left.png) no-repeat;
+        background-size: 100% 100%;
+      }
+      .parking-wrap .park-area .parking-direction-lower-right{
+        width: 28px;
+        height: 31px;
+        margin: 0 6px 0 28px;
+        background: url(image/parking-lower-left.png) no-repeat;
+        background-size: 100% 100%;
+        transform: rotateY(180deg);
+      }
+      .parking-wrap .park-area .parking-direction-left{
+        width: 34px;
+        height: 33px;
+        margin-left: 28px;
+        background: url(image/parking-left.png) no-repeat;
+        background-size: 100% 100%;
+      }
+      .parking-wrap .park-area .parking-direction-current{
+        width: 35px;
+        height: 44px;
+        margin-left: 28px;
+        background: url(image/parking-current.png) no-repeat;
+        background-size: 100% 100%;
+      }
+      .parking-wrap .park-area .park-title{
+        font-size: 40px;
+        font-weight: 500;
+        margin-left: 10px;
+        flex: 0 0 72px;
+      }
+      .parking-wrap .park-area .park-num{
+        flex: 0 0 48px;
+        text-align: center;
+        font-size: 40px;
+        font-weight: 500;
+        color: #00FF48;
+        margin-left: 20px;
+      }
+      .parking-wrap .park-current .park-title{
+        color: #FFCC00;
+      }
+      /* 东区一层样式 */
+      .east-1-wrap .park-area{
+        margin-top: 29px;
+        height: 200px;
+        flex-direction: column;
+      }
+      .east-1-wrap .park-area:first-child{
+        margin-top: 22px;
+      }
+      .east-1-wrap .park-area:last-child{
+        margin-top: 2px;
+      }
+      .east-1-wrap .park-area .parking-direction-current{
+        width: 52px;
+        height: 66px;
+        margin-left: 34px;
+        background: url(image/parking-current.png) no-repeat;
+        background-size: 100% 100%;
+      }
+      .east-1-wrap .park-area .parking-direction-left{
+        width: 52px;
+        height: 51px;
+        margin: 0 6px 0 28px;
+        background: url(image/parking-left.png) no-repeat;
+        background-size: 100% 100%;
+      }
+      .east-1-wrap .park-area .parking-direction-right{
+        width: 52px;
+        height: 51px;
+        margin: 0 6px 0 28px;
+        background: url(image/parking-left.png) no-repeat;
+        background-size: 100% 100%;
+        transform: rotateY(180deg);
+      }
+      .east-1-wrap .park-title-wrap{
+        width: 100%;
+        display: flex;
+        align-items: center;
+      }
+      .east-1-wrap .park-area .park-title{
+        font-size: 60px;
+        font-weight: 500;
+        margin-left: 10px;
+        flex: 0 0 130px;
+      }
+      .east-1-wrap .park-area .park-num{
+        flex: 0 0 88px;
+        text-align: center;
+        font-size: 94px;
+        font-weight: 500;
+        color: #00FF48;
+        margin: -24px 0 0 56px;
+      }
+      /* 西区一层样式 */
+      .west-1-wrap .park-area{
+        margin-top: 21px;
+        height: 110px;
+        flex-direction: column;
+      }
+      .west-1-wrap .park-area:first-child{
+        margin-top: 16px;
+      }
+      .west-1-wrap .park-area:last-child{
+        margin-top: 32px;
+      }
+      .west-1-wrap .park-area .parking-direction-current{
+        width: 40px;
+        height: 51px;
+        margin-left: 34px;
+        background: url(image/parking-current.png) no-repeat;
+        background-size: 100% 100%;
+      }
+      .west-1-wrap .park-area .parking-direction-left{
+        width: 39px;
+        height: 38px;
+        margin: 0 6px 0 34px;
+        background: url(image/parking-left.png) no-repeat;
+        background-size: 100% 100%;
+      }
+      .west-1-wrap .park-area .parking-direction-right{
+        width: 39px;
+        height: 38px;
+        margin: 0 6px 0 34px;
+        background: url(image/parking-left.png) no-repeat;
+        background-size: 100% 100%;
+        transform: rotateY(180deg);
+      }
+      .west-1-wrap .park-title-wrap{
+        width: 100%;
+        display: flex;
+        align-items: center;
+      }
+      .west-1-wrap .park-area .park-title{
+        font-size: 40px;
+        font-weight: 500;
+        margin-left: 10px;
+        flex: 0 0 130px;
+      }
+      .west-1-wrap .park-area .park-num{
+        flex: 0 0 88px;
+        text-align: center;
+        font-size: 62px;
+        font-weight: 500;
+        color: #00FF48;
+        margin: -14px 0 0 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header"></div>
+      <div class="parking-wrap ">
+        <!-- <div class="park-area">
+          <span class="parking-direction-up"></span>
+          <span class="park-title">E区</span>
+          <span class="park-num">23</span>
+        </div>
+        <div class="park-area">
+          <span class="parking-direction-up"></span>
+          <span class="park-title">D区</span>
+          <span class="park-num">23</span>
+        </div>
+        <div class="park-area">
+          <span class="parking-direction-up"></span>
+          <span class="park-title">C区</span>
+          <span class="park-num">10</span>
+        </div> -->
+        <!-- <div class="park-area">
+          <div class="park-title-wrap">
+            <span class="parking-direction-left"></span>
+            <span class="park-title">C区</span>
+          </div>
+          <span class="park-num">13</span>
+        </div>
+        <div class="park-area ">
+          <div class="park-title-wrap">
+            <span class="parking-direction-left"></span>
+            <span class="park-title">B区</span>
+          </div>
+          <span class="park-num">23</span>
+        </div>
+        <div class="park-area park-current">
+          <div class="park-title-wrap">
+            <span class="parking-direction-current"></span>
+            <span class="park-title">A区</span>
+          </div>
+          <span class="park-num">0</span>
+        </div> -->
+        <!-- <div class="park-area">
+          <span class="parking-direction-left"></span>
+          <span class="park-title">F区</span>
+          <span class="park-num">3</span>
+        </div> -->
+      </div>
+    </div>
+  </body>
+  <script>
+    var data = [];
+
+    $(function() {
+      var areaId = GetQueryString('areaId')
+      loadLedYdp(areaId)
+      var dsq = setInterval(function() {
+        loadLedYdp(areaId)
+      }, 1000 * 10)
+    })
+
+    function loadLedYdp(areaId) {
+      $.ajax({
+        type: 'get',
+        async: false,
+        // url: "http://192.168.32.122:8080/api/message/getParkInfo?areaId=" + areaId,
+        url: "http://59.63.209.17:26015/api/message/getParkInfo?areaId=" + areaId,
+        dataType: 'text',
+        success: function (data2) {
+          // console.log(JSON.parse(data2).data)
+          data = JSON.parse(data2).data
+          generateParking()
+        }
+      });
+    }
+
+    function GetQueryString(name) {
+      var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+      var r = window.location.search.substr(1).match(reg);
+      if(r!=null)return  unescape(r[2]); return null;
+    }
+
+    function generateParking() {
+      var _areaName = '';
+      var _floorName = '';
+      var html = '';
+      for (var i = 0; i < data.length; i++) {
+        var areaJson = data[i];
+        if (areaJson.areaType == "1") {
+          _areaName = areaJson.areaName;
+          _floorName = areaJson.floorName;
+          $('.parking-wrap').removeClass('west-2-wrap east-2-wrap east-1-wrap west-1-wrap')
+          if (areaJson.floorName == '西区二层') {
+            $('.parking-wrap').addClass('west-2-wrap');
+          } else if (areaJson.floorName == '东区二层') {
+            $('.parking-wrap').addClass('east-2-wrap');
+          } else if (areaJson.floorName == '东区一层') {
+            $('.parking-wrap').addClass('east-1-wrap');
+          } else if (areaJson.floorName == '西区一层') {
+            $('.parking-wrap').addClass('west-1-wrap');
+          }
+
+          break;
+        }
+      }
+
+      if (_floorName == '西区二层') {
+        var numA = 0;
+        var numB = 0;
+        var numC = 0;
+        var numD = 0;
+        var numE = 0;
+
+        for (var i = 0; i < data.length; i++) {
+          var areaJson = data[i];
+          if (areaJson.areaName == 'A区' && areaJson.floorName == _floorName) {
+            numA = areaJson.left
+          } else if (areaJson.areaName == 'B区' && areaJson.floorName == _floorName) {
+            numB = areaJson.left
+          } else if (areaJson.areaName == 'C区' && areaJson.floorName == _floorName) {
+            numC = areaJson.left
+          } else if (areaJson.areaName == 'D区' && areaJson.floorName == _floorName) {
+            numD = areaJson.left
+          } else if (areaJson.areaName == 'E区' && areaJson.floorName == _floorName) {
+            numE = areaJson.left
+          }
+        }
+
+        if (_areaName == 'A区') {
+          html += '<div class="park-area"><span class="parking-direction-up"></span><span class="park-title">D区</span><span class="park-num">' + numD + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-up"></span><span class="park-title">C区</span><span class="park-num">' + numC + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-up"></span><span class="park-title">B区</span><span class="park-num">' + numB + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-current"></span><span class="park-title">A区</span><span class="park-num">' + numA + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-lower-left"></span><span class="park-title">E区</span><span class="park-num">' + numE + '</span></div>';
+        } else if (_areaName == 'B区') {
+          html += '<div class="park-area"><span class="parking-direction-up"></span><span class="park-title">D区</span><span class="park-num">' + numD + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-up"></span><span class="park-title">C区</span><span class="park-num">' + numC + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-current"></span><span class="park-title">B区</span><span class="park-num">' + numB + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-down"></span><span class="park-title">A区</span><span class="park-num">' + numA + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-lower-left"></span><span class="park-title">E区</span><span class="park-num">' + numE + '</span></div>';
+        } else if (_areaName == 'C区') {
+          html += '<div class="park-area"><span class="parking-direction-up"></span><span class="park-title">D区</span><span class="park-num">' + numD + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-current"></span><span class="park-title">C区</span><span class="park-num">' + numC + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-down"></span><span class="park-title">B区</span><span class="park-num">' + numB + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-down"></span><span class="park-title">A区</span><span class="park-num">' + numA + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-lower-left"></span><span class="park-title">E区</span><span class="park-num">' + numE + '</span></div>';
+        } else if (_areaName == 'D区') {
+          html += '<div class="park-area"><span class="parking-direction-current"></span><span class="park-title">D区</span><span class="park-num">' + numD + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-down"></span><span class="park-title">C区</span><span class="park-num">' + numC + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-down"></span><span class="park-title">B区</span><span class="park-num">' + numB + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-down"></span><span class="park-title">A区</span><span class="park-num">' + numA + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-lower-left"></span><span class="park-title">E区</span><span class="park-num">' + numE + '</span></div>';
+        } else if (_areaName == 'E区') {
+          html += '<div class="park-area"><span class="parking-direction-lower-right"></span><span class="park-title">D区</span><span class="park-num">' + numD + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-lower-right"></span><span class="park-title">C区</span><span class="park-num">' + numC + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-lower-right"></span><span class="park-title">B区</span><span class="park-num">' + numB + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-lower-right"></span><span class="park-title">A区</span><span class="park-num">' + numA + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-current"></span><span class="park-title">E区</span><span class="park-num">' + numE + '</span></div>';
+        }
+
+        $(".parking-wrap").html(html)
+      } else if (_floorName == '东区二层') {
+        var numA = 0;
+        var numB = 0;
+        var numC = 0;
+        var numD = 0;
+        var numE = 0;
+        var numF = 0;
+
+        for (var i = 0; i < data.length; i++) {
+          var areaJson = data[i];
+          if (areaJson.areaName == 'A区' && areaJson.floorName == _floorName) {
+            numA = areaJson.left
+          } else if (areaJson.areaName == 'B区' && areaJson.floorName == _floorName) {
+            numB = areaJson.left
+          } else if (areaJson.areaName == 'C区' && areaJson.floorName == _floorName) {
+            numC = areaJson.left
+          } else if (areaJson.areaName == 'D区' && areaJson.floorName == _floorName) {
+            numD = areaJson.left
+          } else if (areaJson.areaName == 'E区' && areaJson.floorName == _floorName) {
+            numE = areaJson.left
+          } else if (areaJson.areaName == 'F区' && areaJson.floorName == _floorName) {
+            numF = areaJson.left
+          }
+        }
+
+        if (_areaName == 'A区') {
+          html += '<div class="park-area"><span class="parking-direction-up"></span><span class="park-title">E区</span><span class="park-num">' + numE + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-up"></span><span class="park-title">D区</span><span class="park-num">' + numD + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-up"></span><span class="park-title">C区</span><span class="park-num">' + numC + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-up"></span><span class="park-title">B区</span><span class="park-num">' + numB + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-current"></span><span class="park-title">A区</span><span class="park-num">' + numA + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-left"></span><span class="park-title">F区</span><span class="park-num">' + numF + '</span></div>';
+        } else if (_areaName == 'B区') {
+          html += '<div class="park-area"><span class="parking-direction-up"></span><span class="park-title">E区</span><span class="park-num">' + numE + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-up"></span><span class="park-title">D区</span><span class="park-num">' + numD + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-up"></span><span class="park-title">C区</span><span class="park-num">' + numC + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-current"></span><span class="park-title">B区</span><span class="park-num">' + numB + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-down"></span><span class="park-title">A区</span><span class="park-num">' + numA + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-lower-left"></span><span class="park-title">F区</span><span class="park-num">' + numF + '</span></div>';
+        } else if (_areaName == 'C区') {
+          html += '<div class="park-area"><span class="parking-direction-up"></span><span class="park-title">E区</span><span class="park-num">' + numE + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-up"></span><span class="park-title">D区</span><span class="park-num">' + numD + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-current"></span><span class="park-title">C区</span><span class="park-num">' + numC + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-down"></span><span class="park-title">B区</span><span class="park-num">' + numB + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-down"></span><span class="park-title">A区</span><span class="park-num">' + numA + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-lower-left"></span><span class="park-title">F区</span><span class="park-num">' + numF + '</span></div>';
+        } else if (_areaName == 'D区') {
+          html += '<div class="park-area"><span class="parking-direction-up"></span><span class="park-title">E区</span><span class="park-num">' + numE + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-current"></span><span class="park-title">D区</span><span class="park-num">' + numD + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-down"></span><span class="park-title">C区</span><span class="park-num">' + numC + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-down"></span><span class="park-title">B区</span><span class="park-num">' + numB + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-down"></span><span class="park-title">A区</span><span class="park-num">' + numA + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-lower-left"></span><span class="park-title">F区</span><span class="park-num">' + numF + '</span></div>';
+        } else if (_areaName == 'E区') {
+          html += '<div class="park-area"><span class="parking-direction-current"></span><span class="park-title">E区</span><span class="park-num">' + numE + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-down"></span><span class="park-title">D区</span><span class="park-num">' + numD + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-down"></span><span class="park-title">C区</span><span class="park-num">' + numC + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-down"></span><span class="park-title">B区</span><span class="park-num">' + numB + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-down"></span><span class="park-title">A区</span><span class="park-num">' + numA + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-lower-left"></span><span class="park-title">F区</span><span class="park-num">' + numF + '</span></div>';
+        } else if (_areaName == 'F区') {
+          html += '<div class="park-area"><span class="parking-direction-lower-right"></span><span class="park-title">E区</span><span class="park-num">' + numE + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-lower-right"></span><span class="park-title">D区</span><span class="park-num">' + numD + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-lower-right"></span><span class="park-title">C区</span><span class="park-num">' + numC + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-lower-right"></span><span class="park-title">B区</span><span class="park-num">' + numB + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-down"></span><span class="park-title">A区</span><span class="park-num">' + numA + '</span></div>';
+          html += '<div class="park-area"><span class="parking-direction-current"></span><span class="park-title">F区</span><span class="park-num">' + numF + '</span></div>';
+        }
+
+        $(".parking-wrap").html(html)
+      } else if (_floorName == '东区一层') {
+        var numA = 0;
+        var numB = 0;
+
+        for (var i = 0; i < data.length; i++) {
+          var areaJson = data[i];
+          if (areaJson.areaName == 'A区' && areaJson.floorName == _floorName) {
+            numA = areaJson.left
+          } else if (areaJson.areaName == 'B区' && areaJson.floorName == _floorName) {
+            numB = areaJson.left
+          }
+        }
+
+        if (_areaName == 'A区') {
+          html += '<div class="park-area"><div class="park-title-wrap"><span class="parking-direction-left"></span><span class="park-title">B区</span></div><span class="park-num">' + numB + '</span></div>';
+          html += '<div class="park-area park-current"><div class="park-title-wrap"><span class="parking-direction-current"></span><span class="park-title">A区</span></div><span class="park-num">' + numA + '</span></div>';
+        } else if (_areaName == 'B区') {
+          html += '<div class="park-area park-current"><div class="park-title-wrap"><span class="parking-direction-current"></span><span class="park-title">B区</span></div><span class="park-num">' + numB + '</span></div>';
+          html += '<div class="park-area"><div class="park-title-wrap"><span class="parking-direction-right"></span><span class="park-title">A区</span></div><span class="park-num">' + numA + '</span></div>';
+        }
+
+        $(".parking-wrap").html(html)
+      } else if (_floorName == '西区一层') {
+        var numA = 0;
+        var numB = 0;
+        var numC = 0;
+
+        for (var i = 0; i < data.length; i++) {
+          var areaJson = data[i];
+          if (areaJson.areaName == 'A区' && areaJson.floorName == _floorName) {
+            numA = areaJson.left
+          } else if (areaJson.areaName == 'B区' && areaJson.floorName == _floorName) {
+            numB = areaJson.left
+          } else if (areaJson.areaName == 'C区' && areaJson.floorName == _floorName) {
+            numC = areaJson.left
+          }
+        }
+
+        if (_areaName == 'A区') {
+          html += '<div class="park-area"><div class="park-title-wrap"><span class="parking-direction-left"></span><span class="park-title">C区</span></div><span class="park-num">' + numC + '</span></div>';
+          html += '<div class="park-area"><div class="park-title-wrap"><span class="parking-direction-left"></span><span class="park-title">B区</span></div><span class="park-num">' + numB + '</span></div>';
+          html += '<div class="park-area park-current"><div class="park-title-wrap"><span class="parking-direction-current"></span><span class="park-title">A区</span></div><span class="park-num">' + numA + '</span></div>';
+        } else if (_areaName == 'B区') {
+          html += '<div class="park-area"><div class="park-title-wrap"><span class="parking-direction-left"></span><span class="park-title">C区</span></div><span class="park-num">' + numC + '</span></div>';
+          html += '<div class="park-area park-current"><div class="park-title-wrap"><span class="parking-direction-current"></span><span class="park-title">B区</span></div><span class="park-num">' + numB + '</span></div>';
+          html += '<div class="park-area"><div class="park-title-wrap"><span class="parking-direction-right"></span><span class="park-title">A区</span></div><span class="park-num">' + numA + '</span></div>';
+        } else if (_areaName == 'C区') {
+          html += '<div class="park-area park-current"><div class="park-title-wrap"><span class="parking-direction-current"></span><span class="park-title">C区</span></div><span class="park-num">' + numC + '</span></div>';
+          html += '<div class="park-area"><div class="park-title-wrap"><span class="parking-direction-right"></span><span class="park-title">B区</span></div><span class="park-num">' + numB + '</span></div>';
+          html += '<div class="park-area"><div class="park-title-wrap"><span class="parking-direction-right"></span><span class="park-title">A区</span></div><span class="park-num">' + numA + '</span></div>';
+        }
+
+        $(".parking-wrap").html(html)
+      }
+    }
+
+  </script>
+</html>
