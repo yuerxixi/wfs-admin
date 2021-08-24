@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>LED全彩屏</title>
+    <script src="js/jquery.min.js"></script>
+    <style>
+      body{
+        padding: 0;
+        margin: 0;
+      }
+      *{
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+      }
+      .container{
+        width: 384px;
+        background: linear-gradient(0deg, #010B19, #191E26);
+      }
+      .qcp1-wrap{
+        height: 256px;
+      }
+      .qcp1-wrap .header-title{
+        width: 100%;
+        height: 50px;
+        font-size: 26px;
+        font-weight: bold;
+        color: #00FF2A;
+        text-align: center;
+        line-height: 52px;
+        letter-spacing: 6px;
+        margin-left: 10px;
+      }
+      .qcp1-wrap .content{
+        width: 100%;
+        height: 206px;
+        display: flex;
+        border-top: 2px solid #384D6D;
+      }
+      .qcp1-wrap .content .left-wrap{
+        width: 174px;
+        height: 100%;
+        position: relative;
+      }
+      .qcp1-wrap .content .left-wrap .img1{
+        width: 106px;
+        height: 123px;
+        position: absolute;
+        left: 39px;
+        top: 63px;
+      }
+      .qcp1-wrap .content .left-wrap .big-car-title{
+        position: absolute;
+        left: 22px;
+        top: 19px;
+        font-size: 28px;
+        font-weight: bold;
+        color: #FFFFFF;
+        letter-spacing: 2px;
+      }
+      .qcp1-wrap .content .left-wrap .small-car-title{
+        position: absolute;
+        left: 108px;
+        top: 78px;
+        font-size: 28px;
+        font-weight: bold;
+        color: #FFFFFF;
+        letter-spacing: 2px;
+      }
+      .qcp1-wrap .content .right-wrap{
+        width: 210px;
+        height: 100%;
+        border-right: 2px solid #384D6D;
+      }
+      .qcp1-wrap .right-wrap .cars-wrap{
+        width: 100%;
+        height: 125px;
+        display: flex;
+      }
+      .qcp1-wrap .cars-wrap .row{
+        flex: 0 0 50%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      .qcp1-wrap .cars-wrap .row .title{
+        font-size: 24px;
+        font-weight: bold;
+        color: #FFFFFF;
+      }
+      .qcp1-wrap .cars-wrap .row .num{
+        font-size: 42px;
+        font-weight: bold;
+        color: #00FF2A;
+      }
+      .qcp1-wrap .icons-wrap{
+        width: 100%;
+        height: 68px;
+        display: flex;
+        flex-flow: row wrap;
+      }
+      .qcp1-wrap .icons-wrap .bg1{
+        flex: 0 0 52px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(0deg, rgba(4, 13, 26, 0.74), rgba(16, 33, 63, 0.74));
+        border: 1px solid #122032;
+      }
+      .qcp1-wrap .icons-wrap .bg2{
+        flex: 0 0 52px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: rgba(4, 15, 33, 0);
+        border: 1px solid #122032;
+      }
+      .qcp2-wrap{
+        width: 100%;
+        height: 73px;
+        background: linear-gradient(0deg, #010B19, #191E26);
+        display: flex;
+        align-items: center;
+        color: #fff;
+      }
+      .qcp2-wrap .park-col{
+        flex: 0 0 50%;
+        height: 50px;
+        display: flex;
+        align-items: center;
+      }
+      .qcp2-wrap .park-col:first-child{
+        border-right: 4px solid #1B2330;
+      }
+      .qcp2-wrap .park-col .title{
+        margin-left: 16px;
+        font-size: 26px;
+        font-weight: bold;
+      }
+      .qcp2-wrap .park-col .num{
+        margin-left: 16px;
+        font-size: 46px;
+        font-weight: bold;
+        color: #00FF48;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="qcp1-wrap" style="display: none;">
+        <div class="header-title">扬州广陵服务区欢迎您！</div>
+        <div class="content">
+          <div class="right-wrap">
+            <div class="cars-wrap">
+              <div class="row">
+                <span class="title">大车</span>
+                <span class="num big-car-num">38</span>
+              </div>
+              <div class="row">
+                <span class="title">小车</span>
+                <span class="num small-car-num">122</span>
+              </div>
+            </div>
+            <div class="icons-wrap">
+              <div class="bg1">
+                <img src="image/qcp-icon-2.png" style="width: 19px;height: 27px;" />
+              </div>
+              <div class="bg2">
+                <img src="image/qcp-icon-3.png" style="width: 23px;height: 25px;" />
+              </div>
+              <div class="bg1">
+                <img src="image/qcp-icon-4.png" style="width: 22px;height: 27px;" />
+              </div>
+              <div class="bg2">
+                <img src="image/qcp-icon-5.png" style="width: 32px;height: 17px;" />
+              </div>
+              <div class="bg2">
+                <img src="image/qcp-icon-6.png" style="width: 26px;height: 27px;" />
+              </div>
+              <div class="bg1">
+                <img src="image/qcp-icon-7.png" style="width: 25px;height: 24px;" />
+              </div>
+              <div class="bg2">
+                <img src="image/qcp-icon-8.png" style="width: 27px;height: 27px;" />
+              </div>
+              <div class="bg1">
+                <img src="image/qcp-icon-9.png" style="width: 25px;height: 24px;" />
+              </div>
+            </div>
+          </div>
+          <div class="left-wrap">
+            <img class="img1" src="image/qcp-icon-1.png" />
+            <div class="big-car-title">大车</div>
+            <div class="small-car-title">小车</div>
+          </div>
+        </div>
+      </div>
+      <div class="qcp2-wrap" style="display: none;">
+        <div class="park-col">
+          <span class="title">一层</span>
+          <span class="num big-car-num">139</span>
+        </div>
+        <div class="park-col">
+          <span class="title">二层</span>
+          <span class="num small-car-num">026</span>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    $(function() {
+      var type = GetQueryString('type')
+
+      if (type == '2') {
+        $(".qcp2-wrap").show()
+      } else {
+        $(".qcp1-wrap").show()
+      }
+      loadLedQcp()
+      var dsq = setInterval(function() {
+        loadLedQcp()
+      }, 1000 * 10)
+    })
+
+    function loadLedQcp() {
+      $.ajax({
+        type: 'get',
+        async: false,
+        // url: "http://192.168.32.122:8080/api/message/getParkInfo",
+        url: "http://59.63.209.17:26015/api/message/getParkInfo",
+        dataType: 'text',
+        success: function (data2) {
+          var data = JSON.parse(data2).data[0]
+          $(".big-car-num").html(data.oneFloor)
+          $(".small-car-num").html(data.twoFloor)
+        }
+      });
+    }
+
+    function GetQueryString(name) {
+      var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+      var r = window.location.search.substr(1).match(reg);
+      if(r!=null)return  unescape(r[2]); return null;
+    }
+  </script>
+</html>
