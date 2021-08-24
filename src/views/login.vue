@@ -1,0 +1,285 @@
+<template>
+  <div class="login">
+    <!--    <img src="../assets/images/loginBackground.png" class="login-bg">-->
+    <div class="login-bg" />
+    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" label-position="left" label-width="0px" class="login-form">
+      <h3 class="title">
+        扬州广陵智慧<br>服务区管理平台
+      </h3>
+      <el-form-item prop="username">
+        <el-input ref="username" v-model="loginForm.username" type="text" auto-complete="off" placeholder="账号">
+          <svg-icon slot="prefix" icon-class="login-people" class="el-input__icon input-icon" />
+        </el-input>
+      </el-form-item>
+      <el-form-item prop="password">
+        <el-input v-model="loginForm.password" type="password" auto-complete="off" placeholder="密码" @keyup.enter.native="handleLogin">
+          <svg-icon slot="prefix" icon-class="logon-pass" class="el-input__icon input-icon" style="width: 16px;" />
+        </el-input>
+      </el-form-item>
+      <!--      <el-form-item prop="code">
+        <el-input v-model="loginForm.code" auto-complete="off" placeholder="验证码" style="width: 63%" @keyup.enter.native="handleLogin">
+          <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon" />
+        </el-input>
+        <div class="login-code">
+          <img :src="codeUrl" @click="getCode">
+        </div>
+      </el-form-item>-->
+      <el-checkbox v-model="loginForm.rememberMe" class="rememberMe">
+        记住我
+      </el-checkbox>
+      <el-form-item style="width:100%;">
+        <el-button :loading="loading" size="medium" type="primary" style="width:100%;" @click.native.prevent="handleLogin">
+          <span v-if="!loading">登 录</span>
+          <span v-else>登 录 中...</span>
+        </el-button>
+      </el-form-item>
+    </el-form>
+    <!--  底部  -->
+    <div v-if="$store.state.settings.showFooter" id="el-login-footer">
+      <span v-html="$store.state.settings.footerTxt" />
+      <span> ⋅ </span>
+      <a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank">{{ $store.state.settings.caseNumber }}</a>
+    </div>
+  </div>
+</template>
+
+<script>
+// import { encrypt } from '@/utils/rsaEncrypt'
+import Config from '@/settings'
+// import { getCodeImg } from '@/api/login'
+import Cookies from 'js-cookie'
+import qs from 'qs'
+import Background from '@/assets/images/loginBackground.png'
+// import { uuid } from '../utils/common'
+
+export default {
+  name: 'Login',
+  data() {
+    return {
+      Background: Background,
+      codeUrl: '',
+      cookiePass: '',
+      loginForm: {
+        username: '',
+        password: '',
+        rememberMe: false,
+        // code: '',
+        uuid: ''
+      },
+      loginRules: {
+        username: [{ required: true, trigger: ['blur', 'change'], message: '用户名不能为空' }],
+        password: [{ required: true, trigger: ['blur', 'change'], message: '密码不能为空' }]
+        // code: [{ required: true, trigger: 'change', message: '验证码不能为空' }]
+      },
+      loading: false,
+      redirect: undefined,
+      codeUUID: ''
+    }
+  },
+  watch: {
+    $route: {
+      handler: function(route) {
+        const data = route.query
+        if (data && data.redirect) {
+          this.redirect = data.redirect
+          delete data.redirect
+          if (JSON.stringify(data) !== '{}') {
+            this.redirect = this.redirect + '&' + qs.stringify(data, { indices: false })
+          }
+        }
+      },
+      immediate: true
+    }
+  },
+  created() {
+    // 获取验证码
+    // this.getCode()
+    // 获取用户名密码等Cookie
+    this.getCookie()
+    // token 过期提示
+    this.point()
+  },
+  mounted() {
+    // 默认焦点在用户名输入框
+    this.$refs.username.focus()
+  },
+  methods: {
+    // getCode() {
+    //   this.codeUUID = uuid()
+    //   getCodeImg(this.codeUUID).then(res => {
+    //     this.codeUrl = res.img
+    //     this.loginForm.uuid = this.codeUUID
+    //   })
+    // },
+    getCookie() {
+      const username = Cookies.get('username')
+      let password = Cookies.get('password')
+      const rememberMe = Cookies.get('rememberMe')
+      // 保存cookie里面的加密后的密码
+      this.cookiePass = password === undefined ? '' : password
+      password = password === undefined ? this.loginForm.password : password
+      this.loginForm = {
+        username: username === undefined ? this.loginForm.username : username,
+        password: password,
+        rememberMe: rememberMe === undefined ? false : Boolean(rememberMe)
+        // code: ''
+      }
+    },
+    handleLogin() {
+      this.$refs.loginForm.validate(valid => {
+        const user = {
+          username: this.loginForm.username,
+          password: this.loginForm.password,
+          rememberMe: this.loginForm.rememberMe,
+          // code: this.loginForm.code,
+          // captcha: this.loginForm.code,
+          uuid: this.loginForm.uuid
+        }
+        if (user.password !== this.cookiePass) {
+          // user.password = encrypt(user.password)
+        }
+        if (valid) {
+          // this.loading = true
+          if (user.rememberMe) {
+            Cookies.set('username', user.username, { expires: Config.passCookieExpires })
+            Cookies.set('password', user.password, { expires: Config.passCookieExpires })
+            Cookies.set('rememberMe', user.rememberMe, { expires: Config.passCookieExpires })
+          } else {
+            Cookies.remove('username')
+            Cookies.remove('password')
+            Cookies.remove('rememberMe')
+          }
+          // console.log('user', user)
+          this.$store.dispatch('Login', user).then((res) => {
+            // this.loading = false
+            this.$router.push({ path: this.redirect || '/' })
+          }).catch(() => {
+            // this.loading = false
+            // this.getCode()
+          })
+        } else {
+          // console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    point() {
+      const point = Cookies.get('point') !== undefined
+      if (point) {
+        this.$notify({
+          title: '提示',
+          message: '当前登录状态已过期，请重新登录！',
+          type: 'warning',
+          duration: 5000
+        })
+        Cookies.remove('point')
+      }
+    }
+  }
+}
+</script>
+
+<style rel="stylesheet/scss" lang="scss" scoped>
+  .login-bg{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: -1;
+    background-size: cover;
+    background-image: url("../assets/images/loginBackground.png");
+  }
+  .login {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 100%;
+    //background-size: cover;
+    //background-image: url("../assets/images/loginBackground.png");
+    //background-size: 100% 100%;
+    background: linear-gradient(91deg, rgba(22, 62, 123, 0.21), rgba(5, 14, 58, 0.21));
+  }
+  .title {
+    margin: -10px 0 50px 0;
+    //text-align: center;
+    //color: #707070;
+
+    width: 257px;
+    height: 86px;
+    font-size: 36px;
+    font-weight: bold;
+    color: #333333;
+    line-height: 50px;
+  }
+
+  .login-form {
+    border-radius: 6px;
+    background: #ffffff;
+    /*width: 30%;*/
+    /*height: 50%;*/
+    width: 576px;
+    height: 500px;
+    padding: 70px 94px 70px 94px;
+    margin-right: 10%;
+    .el-input {
+      >>> input {
+        width: 388px;
+        height: 50px;
+        background: #FFFFFF;
+        border: 1px solid #DDDDDD;
+        border-radius: 25px;
+        padding-left: 48px;
+        font-size: 18px;
+        color: #333333;
+      }
+      >>> .el-input__icon{
+        height: 50px;
+        width: 18px;
+        margin-left: 10px;
+      }
+    }
+    .input-icon{
+      height: 39px;width: 14px;margin-left: 2px;
+    }
+    .rememberMe{
+      margin: 0 0 25px 16px;
+      >>> .el-checkbox__inner{
+        width: 18px;
+        height: 18px;
+        &::after{
+          left: 6px;
+          top: 2px;
+          width: 4px;
+          height: 8px;
+        }
+      }
+      >>> .el-checkbox__label{
+        font-size: 16px;
+        color: #666666;
+      }
+    }
+    >>> .el-button--primary{
+      height: 50px;
+      background: linear-gradient(91deg, #4462C1 0%, #4C55D6 100%);
+      border-radius: 25px;
+      font-size: 18px;
+      font-weight: 500;
+    }
+  }
+  .login-tip {
+    font-size: 13px;
+    text-align: center;
+    color: #bfbfbf;
+  }
+  .login-code {
+    width: 33%;
+    display: inline-block;
+    height: 38px;
+    float: right;
+    img{
+      cursor: pointer;
+      vertical-align:middle;
+      width: 100%;
+      height: 100%;
+    }
+  }
+</style>
